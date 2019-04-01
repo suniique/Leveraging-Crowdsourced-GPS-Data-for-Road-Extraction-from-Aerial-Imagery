@@ -1,0 +1,7 @@
+/venv/
+/weights/
+!/weights/.gitkeep
+__pycache__/
+*.pyc
+*~
+
