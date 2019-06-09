@@ -62,6 +62,12 @@ class Solver:
         pred = pred.cpu().data.numpy().squeeze(1)
         return pred, loss.item(), metrics
 
+    def pred_one_image(self, image):
+        self.net.eval()
+        image = image.cuda().unsqueeze(0)
+        pred = self.net.forward(image)
+        return pred.cpu().data.numpy().squeeze(1).squeeze(0)
+
 
 class Trainer:
     def __init__(self, *args, **kwargs):
@@ -72,6 +78,9 @@ class Trainer:
 
     def set_validation_dl(self, dataloader):
         self.validation_dl = dataloader
+
+    def set_test_dl(self, dataloader):
+        self.test_dl = dataloader
 
     def set_save_path(self, save_path):
         self.save_path = save_path
@@ -97,7 +106,7 @@ class Trainer:
         epoch_metrics /= iter_num
         return epoch_loss, epoch_metrics
 
-    def fit(self, epochs, no_optim_epochs=20):
+    def fit(self, epochs, no_optim_epochs=10):
         val_best_metrics = 0
         val_best_loss = float("+inf")
         no_optim = 0
@@ -110,15 +119,19 @@ class Trainer:
             print(f"validating")
             val_loss, val_metrics = self.fit_one_epoch(self.validation_dl, eval=True)
 
+            print(f"testing")
+            test_loss, test_metrics = self.fit_one_epoch(self.test_dl, eval=True)
+
             print('epoch finished')
             print(f'train_loss: {train_loss:.4f} train_metrics: {train_metrics}')
             print(f'val_loss: {val_loss:.4f} val_metrics: {val_metrics}')
+            print(f'test_loss: {test_loss:.4f} val_metrics: {test_metrics}')
             print()
 
             if val_metrics[3] > val_best_metrics:
-                val_best_metrics = val_metrics
+                val_best_metrics = val_metrics[3]
                 self.solver.save_weights(os.path.join(self.save_path,
-                    f"weights_{val_metrics[3]:.4f}.pth"))
+                    f"epoch{epoch}_val{val_metrics[3]:.4f}_test{test_metrics[3]:.4f}.pth"))
 
             if val_loss < val_best_loss:
                 no_optim = 0

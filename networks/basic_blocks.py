@@ -30,6 +30,44 @@ class DBlock(nn.Module):
         return out
 
 
+class ResidualBlock(nn.Module):
+    expansion = 1
+
+    def __init__(self, inplanes, planes, stride=1, downsample=True, bias=False):
+        super(ResidualBlock, self).__init__()
+        dim_out = planes
+        self.stride = stride
+        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=3, stride=stride,
+                               padding=1, bias=bias)
+        self.bn1 = nn.BatchNorm2d(planes)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(dim_out, dim_out, kernel_size=(3, 3),
+                               stride=1, padding=1)
+        self.bn2 = nn.BatchNorm2d(planes)
+        if downsample == True:
+            self.downsample = nn.Sequential(
+                nn.Conv2d(inplanes, planes, kernel_size=1, stride=stride, bias=bias),
+                nn.BatchNorm2d(planes),
+            )
+        elif isinstance(downsample, nn.Module):
+            self.downsample = downsample
+        else:
+            self.downsample = None
+
+    def forward(self, x):
+        residual = x
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.conv2(x)
+        out = self.bn2(x)
+        if self.downsample is not None:
+            residual = self.downsample(residual)
+        out += residual
+        out = self.relu(out)
+        return out
+
+
 class BasicBlock1DConv(nn.Module):
     expansion = 1
 
