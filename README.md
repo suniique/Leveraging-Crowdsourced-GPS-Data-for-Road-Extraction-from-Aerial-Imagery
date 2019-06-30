@@ -9,14 +9,14 @@ python train.py \
 	--sat_dir "dataset/train_val/image" \
 	--mask_dir "dataset/train_val/mask"\
 	--gps_dir "dataset/GPS/patch" \
-	--gps_type ""
+	--gps_type "data"
 	
 ```
 
 
 ## Dataset
 
-Our dataset is upon request. Please contact me: suntao [AT] tongji.edu.cn
+Our dataset is avaliable upon request. Please contact via: suntao [AT] tongji.edu.cn
 
 ### Dataset Description
 
