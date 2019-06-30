@@ -79,7 +79,7 @@ The `lat`/`lon` are in the WGS System. The data table is sorted by `ID`  and the
 This dataset is published under [**CC BY-NC-SA**](https://creativecommons.org/licenses/by-nc-sa/4.0/) (Attribution-NonCommercial-ShareAlike) License . Please note that it can be **ONLY** used for academic or scientific purpose. 
 
 ## Citation
-We kindly remind you that if finding the code or dataset is useful for your research, please cite our paper.
+We kindly remind you that if found the code or dataset is useful for your research, please cite our paper.
 ```
 Sun, Tao, Zonglin Di, Pengyu Che, Chun Liu, and Yin Wang. 
 "Leveraging Crowdsourced GPS Data for Road Extraction From Aerial Imagery" 
